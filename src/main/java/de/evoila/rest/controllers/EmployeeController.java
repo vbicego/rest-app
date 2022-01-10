@@ -19,6 +19,9 @@ public class EmployeeController {
     @Autowired
     EmployeeRepository employeeRepository;
 
+    @Autowired
+    EmployeeModelAssembler employeeModelAssembler;
+
 //    private final EmployeeRepository employeeRepository;
 //
 //    public EmployeeController(EmployeeRepository employeeRepository) {
@@ -29,9 +32,7 @@ public class EmployeeController {
     CollectionModel<EntityModel<Employee>> all() {
 
         List<EntityModel<Employee>> employees = employeeRepository.findAll().stream()
-                .map(employee -> EntityModel.of(employee,
-                        linkTo(methodOn(EmployeeController.class).one(employee.getId())).withSelfRel(),
-                        linkTo(methodOn(EmployeeController.class).all()).withRel("employees")))
+                .map(employee -> employeeModelAssembler.toModel(employee))
                 .collect(Collectors.toList());
 
         return CollectionModel.of(employees, linkTo(methodOn(EmployeeController.class).all()).withSelfRel());
@@ -43,9 +44,7 @@ public class EmployeeController {
         Employee employee = employeeRepository.findById(id)
                 .orElseThrow(() -> new EmployeeNotFoundException(id));
 
-        return EntityModel.of(employee, //
-                linkTo(methodOn(EmployeeController.class).one(id)).withSelfRel(),
-                linkTo(methodOn(EmployeeController.class).all()).withRel("employees"));
+        return employeeModelAssembler.toModel(employee);
     }
 
     @PostMapping("/employees")
