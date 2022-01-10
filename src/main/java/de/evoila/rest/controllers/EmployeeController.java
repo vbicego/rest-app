@@ -2,6 +2,7 @@ package de.evoila.rest.controllers;
 
 import de.evoila.rest.models.Employee;
 import de.evoila.rest.repositories.EmployeeRepository;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -9,11 +10,14 @@ import java.util.List;
 @RestController
 public class EmployeeController {
 
-    private final EmployeeRepository employeeRepository;
+    @Autowired
+    EmployeeRepository employeeRepository;
 
-    public EmployeeController(EmployeeRepository employeeRepository) {
-        this.employeeRepository = employeeRepository;
-    }
+//    private final EmployeeRepository employeeRepository;
+
+//    public EmployeeController(EmployeeRepository employeeRepository) {
+//        this.employeeRepository = employeeRepository;
+//    }
 
     @GetMapping("/employees")
     List<Employee> all() {
